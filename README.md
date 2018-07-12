@@ -2,11 +2,11 @@
 
 LUA extractor for Tabletop Simulator
 
-Atom's Tabletop Simulator plugin doesn't currently extract LUA scripts for objects nested inside bags or decks.  Most complex Tabletop Simulator boards have scripts on objects that are on bags.  Updating these scripts is very complex with the existing workflow.
+Atom's Tabletop Simulator plugin doesn't currently extract LUA scripts for objects nested inside bags or decks.  Most complex Tabletop Simulator boards have scripts on objects that either inside bags or inside decks.  Updating these scripts is painful with the existing workflow because you have to pull it out of the bag or deck and then save the game, update the script using Atom, and then put it back into the bag manually.  Some complex boards have sciprts on objects that are inside nested bags which are very hard to get to and reassemble. 
 
-To address this limitation this tool reads the JSON save itself and pulls out each LUA script into a seperate file.  It also creates a nested folder structure for containers such as bags and decks.  It uses the same naming convention as Atom's Tabletop Simulator plugin so you can use either tool.
+To address this limitation, this tool reads the JSON save itself and pulls out each LUA script into a seperate file.  It drops that file in a nested folder structure, so its easy to deal with scripts inside nested containers such as bags and decks.  It uses the same naming convention as Atom's Tabletop Simulator plugin so you can use either tool for scripts that are outside bags.
 
-This tool will either extract or embed LUA into a save.  This allows you to extract the LUA, then use Atom or any editor to modify the LUA files and then put them back into the save.
+This tool also embed the LUA back into a save.  This allows you to extract the LUA scripts, then use Atom or any editor to modify the LUA scripts and then embed them back into the save.
 
 # Usage
 
