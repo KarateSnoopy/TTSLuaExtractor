@@ -31,9 +31,16 @@ namespace TTSLuaExtractor
             Console.WriteLine("TTSLuaExtractor embed \"C:\\Users\\KarateSnoopy\\Documents\\My Games\\Tabletop Simulator\\Saves\\TS_Save_51.json\" c:\\git\\myTTSboard c:\\git\\myTTSboard\\shared");
             Console.WriteLine("TTSLuaExtractor embed latest c:\\git\\myTTSboard c:\\git\\myTTSboard\\shared");
         }
+
         static void Main(string[] args)
         {
-            if( args[0] == "extract" )
+            if (args.Length == 0)
+            {
+                ShowHelp();
+                return;
+            }
+
+            if ( args[0] == "extract" )
             {
                 if (args.Length != 3)
                 {
