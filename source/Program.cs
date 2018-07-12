@@ -118,6 +118,7 @@ namespace TTSLuaExtractor
             if (string.IsNullOrWhiteSpace(name))
             {
                 name = obj.Name;
+                name = name.Replace($"_", " "); // for some reason Atom doesn't change '_' to ' ' in nicknames, only names.
             }
 
             if (hasLua)
@@ -129,7 +130,7 @@ namespace TTSLuaExtractor
                 inputFile = $"{name}.{obj.GUID}.ttslua";
                 foreach (char c in Path.GetInvalidFileNameChars())
                 {
-                    inputFile = inputFile.Replace(c, '_');
+                    inputFile = inputFile.Replace($"{c}", "");
                 }
                 string inputFullPath = Path.Combine(inputFolder, inputFile);
                 FileInfo fi = new FileInfo(inputFullPath);
@@ -152,7 +153,7 @@ namespace TTSLuaExtractor
                 outputFolderName = $"{name}.{obj.GUID}";
                 foreach (char c in Path.GetInvalidFileNameChars())
                 {
-                    outputFolderName = outputFolderName.Replace(c, '_');
+                    outputFolderName = outputFolderName.Replace($"{c}", "");
                 }
                 string subFolder = Path.Combine(inputFolder, outputFolderName);
 
@@ -375,6 +376,7 @@ namespace TTSLuaExtractor
             if (string.IsNullOrWhiteSpace(name))
             {
                 name = obj.Name;
+                name = name.Replace($"_", " "); // for some reason Atom doesn't change '_' to ' ' in nicknames, only names.
             }
 
             if (hasLua)
@@ -383,7 +385,7 @@ namespace TTSLuaExtractor
                 outputFile = $"{name}.{obj.GUID}.ttslua";
                 foreach (char c in Path.GetInvalidFileNameChars())
                 {
-                    outputFile = outputFile.Replace(c, '_');
+                    outputFile = outputFile.Replace($"{c}", "");
                 }
                 string outputFullPath = Path.Combine(outputFolder, outputFile);
                 Console.WriteLine($"Writing {outputFullPath}");
@@ -399,7 +401,7 @@ namespace TTSLuaExtractor
                 outputFolderName = $"{name}.{obj.GUID}";
                 foreach (char c in Path.GetInvalidFileNameChars())
                 {
-                    outputFolderName = outputFolderName.Replace(c, '_');
+                    outputFolderName = outputFolderName.Replace($"{c}", "");
                 }
 
                 string subFolder = Path.Combine(outputFolder, outputFolderName);
