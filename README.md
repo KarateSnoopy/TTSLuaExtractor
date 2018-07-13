@@ -1,4 +1,4 @@
-# TTSLuaExtractor
+# Tabletop Simulator LUA Extractor
 
 LUA extractor for Tabletop Simulator
 
