@@ -100,25 +100,53 @@ namespace TTSLuaExtractor
             string json = File.ReadAllText(OutputSave);
             dynamic d = JObject.Parse(json);
             Console.WriteLine("SaveName: " + (string)d.SaveName);
+            EmbedLuaInObject(InputFolder, d, IncludePath, true);
             foreach (dynamic obj in d.ObjectStates)
             {
-                EmbedLuaInObject(InputFolder, obj, IncludePath);
+                EmbedLuaInObject(InputFolder, obj, IncludePath, false);
             }
 
             string newTxt = d.ToString(Formatting.Indented);
             File.WriteAllText(OutputSave, newTxt);
         }
 
-        static void EmbedLuaInObject(string inputFolder, dynamic obj, string includePath)
+        static void EmbedLuaInObject(string inputFolder, dynamic obj, string includePath, bool isGlobal)
         {
             bool hasLua = obj.LuaScript != "";
+            bool hasXml = obj.XmlUI != "";
             bool hasContained = obj.ContainedObjects != null;
 
             string name = obj.Nickname;
             if (string.IsNullOrWhiteSpace(name))
             {
                 name = obj.Name;
-                name = name.Replace($"_", " "); // for some reason Atom doesn't change '_' to ' ' in nicknames, only names.
+                if (name != null)
+                {
+                    name = name.Replace($"_", " "); // for some reason Atom doesn't change '_' to ' ' in nicknames, only names.
+                }
+            }
+
+            if (hasXml)
+            {
+                string inputFile;
+
+                inputFile = $"{name}.{obj.GUID}.xml";
+                foreach (char c in Path.GetInvalidFileNameChars())
+                {
+                    inputFile = inputFile.Replace($"{c}", "");
+                }
+                string inputFullPath = Path.Combine(inputFolder, inputFile);
+                FileInfo fi = new FileInfo(inputFullPath);
+                if (fi.Exists)
+                {
+                    Console.WriteLine($"Reading from {inputFullPath}");
+                    string lua = File.ReadAllText(inputFullPath);
+                    obj.XmlUI = lua;
+                }
+                else
+                {
+                    Console.WriteLine($"XML not found.  {inputFullPath}");
+                }
             }
 
             if (hasLua)
@@ -159,7 +187,7 @@ namespace TTSLuaExtractor
 
                 foreach (dynamic innerObj in obj.ContainedObjects)
                 {
-                    EmbedLuaInObject(subFolder, innerObj, includePath);
+                    EmbedLuaInObject(subFolder, innerObj, includePath, false);
                 }
             }
         }
@@ -216,9 +244,11 @@ namespace TTSLuaExtractor
             string json = File.ReadAllText(inputFile);
             dynamic d = JObject.Parse(json);
             Console.WriteLine("SaveName: " + (string)d.SaveName);
+
+            ExtractLuaFromObject(outputFolder, d, true);
             foreach (dynamic obj in d.ObjectStates)
             {
-                ExtractLuaFromObject(outputFolder, obj);
+                ExtractLuaFromObject(outputFolder, obj, false);
             }
         }
 
@@ -366,9 +396,10 @@ namespace TTSLuaExtractor
             return lua;
         }
 
-        static void ExtractLuaFromObject(string outputFolder, dynamic obj)
+        static void ExtractLuaFromObject(string outputFolder, dynamic obj, bool isGlobal)
         {
             bool hasLua = obj.LuaScript != "";
+            bool hasXml = obj.XmlUI != "";
             bool hasContained = obj.ContainedObjects != null;
             //Console.WriteLine($"Object: {obj.GUID} LUA:{hasLua} HasContained:{hasContained} {obj.Name}, {obj.Nickname}");
 
@@ -376,7 +407,31 @@ namespace TTSLuaExtractor
             if (string.IsNullOrWhiteSpace(name))
             {
                 name = obj.Name;
-                name = name.Replace($"_", " "); // for some reason Atom doesn't change '_' to ' ' in nicknames, only names.
+                if (name != null)
+                {
+                    name = name.Replace($"_", " "); // for some reason Atom doesn't change '_' to ' ' in nicknames, only names.
+                }
+            }
+
+            if (hasXml)
+            {
+                string outputFile;
+                outputFile = $"{name}.{obj.GUID}.xml";
+                foreach (char c in Path.GetInvalidFileNameChars())
+                {
+                    outputFile = outputFile.Replace($"{c}", "");
+                }
+
+                if (isGlobal)
+                {
+                    outputFile = "Global.-1.xml";
+                }
+
+                string outputFullPath = Path.Combine(outputFolder, outputFile);
+                Console.WriteLine($"Writing {outputFullPath}");
+                string xml = obj.XmlUI;
+                Directory.CreateDirectory(outputFolder);
+                File.WriteAllText(outputFullPath, xml);
             }
 
             if (hasLua)
@@ -387,6 +442,12 @@ namespace TTSLuaExtractor
                 {
                     outputFile = outputFile.Replace($"{c}", "");
                 }
+
+                if (isGlobal)
+                {
+                    outputFile = "Global.-1.ttslua";
+                }
+
                 string outputFullPath = Path.Combine(outputFolder, outputFile);
                 Console.WriteLine($"Writing {outputFullPath}");
                 string lua = obj.LuaScript;
@@ -407,7 +468,7 @@ namespace TTSLuaExtractor
                 string subFolder = Path.Combine(outputFolder, outputFolderName);
                 foreach (dynamic innerObj in obj.ContainedObjects)
                 {
-                    ExtractLuaFromObject(subFolder, innerObj);
+                    ExtractLuaFromObject(subFolder, innerObj, false);
                 }
             }
         }
