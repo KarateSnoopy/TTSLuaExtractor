@@ -6,7 +6,13 @@ Atom's Tabletop Simulator plugin doesn't currently extract LUA scripts for objec
 
 To address this limitation, this tool reads the JSON save itself and pulls out each LUA script into a separate file. It drops that file in a nested folder structure, so its easy to deal with scripts inside nested containers such as bags and decks. It uses the same naming convention as Atom's Tabletop Simulator plugin so you can use either tool for scripts that are outside bags.
 
-This tool also embed the LUA back into a save. This allows you to extract the LUA scripts, then use Atom or any editor to modify the LUA scripts and then embed them back into the save.
+This tool can also embed the LUA back into a save. This allows you to extract the LUA scripts, then use Atom or any editor to modify the LUA scripts and then embed them back into the save.
+
+It has full support for the #include feature in Atom's Tabletop Simulator plugin including nested #includes.
+
+# Binary
+
+Either build it yourself with Visual Studio 2017, or get the binary from the attached zip in https://github.com/KarateSnoopy/TTSLuaExtractor/releases
 
 # Usage
 
