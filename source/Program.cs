@@ -135,6 +135,12 @@ namespace TTSLuaExtractor
                 {
                     inputFile = inputFile.Replace($"{c}", "");
                 }
+
+                if (isGlobal)
+                {
+                    inputFile = "Global.-1.xml";
+                }
+
                 string inputFullPath = Path.Combine(inputFolder, inputFile);
                 FileInfo fi = new FileInfo(inputFullPath);
                 if (fi.Exists)
@@ -160,6 +166,12 @@ namespace TTSLuaExtractor
                 {
                     inputFile = inputFile.Replace($"{c}", "");
                 }
+
+                if (isGlobal)
+                {
+                    inputFile = "Global.-1.ttslua";
+                }
+
                 string inputFullPath = Path.Combine(inputFolder, inputFile);
                 FileInfo fi = new FileInfo(inputFullPath);
                 if( fi.Exists )
