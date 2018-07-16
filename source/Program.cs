@@ -382,8 +382,17 @@ namespace TTSLuaExtractor
                 // Read the contents of the #included LUA file, but uncompress it
                 // so that'll expand any includes it has it in recursively 
                 string sharedFullFile = Path.Combine(sharedFilePath, includeFileName + ".ttslua");
-                string sharedFileContents = File.ReadAllText(sharedFullFile);
-                sharedFileContents = UncompressIncludes(sharedFileContents, newBaseFolder, includePath);
+                FileInfo fi = new FileInfo(sharedFullFile);
+                string sharedFileContents = string.Empty;
+                if ( fi.Exists )
+                {
+                    sharedFileContents = File.ReadAllText(sharedFullFile);
+                    sharedFileContents = UncompressIncludes(sharedFileContents, newBaseFolder, includePath);
+                }
+                else
+                {
+                    Console.WriteLine($"Include missing {sharedFullFile} from {commentedIncludeLine}");
+                }
 
                 // First, remove the "#include file" line
                 if (firstIncludeIndexEOL == -1 )
