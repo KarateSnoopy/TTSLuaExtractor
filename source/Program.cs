@@ -270,7 +270,7 @@ namespace TTSLuaExtractor
             {
                 // Looking for something like 
                 // ----#include shared/utils
-                int firstIncludeIndex = lua.IndexOf("----#include");
+                int firstIncludeIndex = lua.IndexOf("----#include ");
                 if(firstIncludeIndex == -1)
                 {
                     break;
@@ -282,7 +282,7 @@ namespace TTSLuaExtractor
                     break;
                 }
                 string originalIncludeLine = lua.Substring(firstIncludeIndex, firstIncludeIndexEOL - firstIncludeIndex);
-                string commentedIncludeLine = originalIncludeLine.Replace("----#include", "#include");
+                string commentedIncludeLine = originalIncludeLine.Replace("----#include ", "#include ");
 
                 // Find the next matching ----#include.  
                 // Everything in-between can be deleted and collapsed
@@ -338,10 +338,10 @@ namespace TTSLuaExtractor
 
             // First, switch all #include to %include so we don't get confused later when 
             // it starts inserting "----#include file" lines
-            lua = lua.Replace("#include", "%include");
+            lua = lua.Replace("#include ", "%include ");
             while (true)
             {
-                int firstIncludeIndex = lua.IndexOf("%include");
+                int firstIncludeIndex = lua.IndexOf("%include ");
                 if (firstIncludeIndex == -1)
                 {
                     break; // Stop if no more #includes to find
@@ -366,7 +366,7 @@ namespace TTSLuaExtractor
                 // shared/util
 
                 commentedIncludeLine = commentedIncludeLine.Replace("\r", "");
-                commentedIncludeLine = commentedIncludeLine.Replace("%include", "----#include");
+                commentedIncludeLine = commentedIncludeLine.Replace("%include ", "----#include ");
                 string commentedIncludeLine2 = commentedIncludeLine;
                 commentedIncludeLine += "\n";
                 // Now commentedIncludeLine should be something like:
