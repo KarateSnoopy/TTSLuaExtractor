@@ -262,6 +262,10 @@ namespace TTSLuaExtractor
             {
                 ExtractLuaFromObject(outputFolder, obj, false);
             }
+
+            FileInfo fiInputFile = new FileInfo(inputFile);
+            string destFile = Path.Combine(outputFolder, fiInputFile.Name);
+            File.Copy(inputFile, destFile);
         }
 
         static string CompressIncludes(string lua)
