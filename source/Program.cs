@@ -280,7 +280,24 @@ namespace TTSLuaExtractor
                     break;
                 }
 
-                int firstIncludeIndexEOL = lua.IndexOf("\n", firstIncludeIndex);
+                int firstIncludeIndexEOLN = lua.IndexOf("\n", firstIncludeIndex);
+                int firstIncludeIndexEOLR = lua.IndexOf("\r", firstIncludeIndex);
+
+                int firstIncludeIndexEOL;
+
+                if (firstIncludeIndexEOLN == -1 && firstIncludeIndexEOLR != -1)
+                {
+                    firstIncludeIndexEOL = firstIncludeIndexEOLR;
+                }
+                else if (firstIncludeIndexEOLR == -1 && firstIncludeIndexEOLN != -1)
+                {
+                    firstIncludeIndexEOL = firstIncludeIndexEOLN;
+                }
+                else
+                {
+                    firstIncludeIndexEOL = Math.Min(firstIncludeIndexEOLR, firstIncludeIndexEOLN);
+                }
+
                 if (firstIncludeIndexEOL == -1)
                 {
                     break;
